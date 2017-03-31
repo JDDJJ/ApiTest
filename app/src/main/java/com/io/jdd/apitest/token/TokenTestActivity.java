@@ -55,33 +55,33 @@ public class TokenTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_token_get)
     public void onGetTokenClick(View v) {
-        RetrofitUtil.getInstance()
-            .get(IApiService.class)
-            .getToken()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<TestModel>() {
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onNext(TestModel model) {
-                    System.out.println(GlobalToken.getToken()+"1");
-                    System.out.println("111");
-                    if (model != null && !TextUtils.isEmpty(model.getData().getToken())) {
-                        GlobalToken.updateToken(model.getData().getToken());
-                        System.out.println(GlobalToken.getToken());
-                    }
-                    System.out.println(GlobalToken.getToken()+"2");
-                }
-            });
+//        RetrofitUtil.getInstance()
+//            .get(IApiService.class)
+//            .getToken()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(new Subscriber<TestModel>() {
+//                @Override
+//                public void onCompleted() {
+//
+//                }
+//
+//                @Override
+//                public void onError(Throwable e) {
+//                    e.printStackTrace();
+//                }
+//
+//                @Override
+//                public void onNext(TestModel model) {
+//                    System.out.println(GlobalToken.getToken()+"1");
+//                    System.out.println("111");
+//                    if (model != null && !TextUtils.isEmpty(model.getData().getToken())) {
+//                        GlobalToken.updateToken(model.getData().getToken());
+//                        System.out.println(GlobalToken.getToken());
+//                    }
+//                    System.out.println(GlobalToken.getToken()+"2");
+//                }
+//            });
     }
 
     @OnClick(R.id.btn_request)
