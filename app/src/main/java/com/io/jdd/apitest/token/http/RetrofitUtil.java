@@ -18,6 +18,7 @@ package com.io.jdd.apitest.token.http;
 
 import java.lang.reflect.Proxy;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -32,18 +33,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitUtil implements IGlobalManager {
 
     //    public static final String API = "http://192.168.56.1:8888/";
-//    public static final String API = "http://192.168.1.110:8888/";
-    public static final String API = "http://192.168.1.227:9000";
+    public static final String API = "http://192.168.1.110:8888/";
+//    public static final String API = "http://192.168.1.227:9000";
 
-    private static Retrofit sRetrofit;
+    private volatile static Retrofit sRetrofit;
     private static OkHttpClient sOkHttpClient;
     private static RetrofitUtil instance;
 
     private final static Object mRetrofitLock = new Object();
 
     private static Retrofit getRetrofit() {
-//        if (sRetrofit == null) {
-//            synchronized (mRetrofitLock) {
+        if (sRetrofit == null) {
+            synchronized (mRetrofitLock) {
         if (sRetrofit == null) {
             OkHttpClient.Builder clientBuilder = new OkHttpClient().newBuilder();
 
@@ -57,8 +58,8 @@ public class RetrofitUtil implements IGlobalManager {
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-//                }
-//            }
+                }
+            }
         }
         return sRetrofit;
     }

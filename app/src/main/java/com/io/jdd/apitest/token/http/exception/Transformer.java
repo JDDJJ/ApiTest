@@ -1,7 +1,7 @@
 package com.io.jdd.apitest.token.http.exception;
 
 
-import com.io.jdd.apitest.token.http.api.Response;
+import com.io.jdd.apitest.token.http.api.IModel;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -13,20 +13,21 @@ import rx.schedulers.Schedulers;
  */
 
 public class Transformer {
-    public static <T> Observable.Transformer<Response<T>, T> sTransformer() {
+    public static <T> Observable.Transformer<IModel<T>, T> sTransformer() {
 
 //        return responseObservable -> responseObservable.map(tResponse -> {
 //        if (tResponse.code!=0) throw new RuntimeException();
 //        return tResponse.data;
 //    }).onErrorResumeNext(new HttpResponseFunc<>());
-        return new Observable.Transformer<Response<T>, T>() {
+        return new Observable.Transformer<IModel<T>, T>() {
             @Override
-            public Observable<T> call(Observable<Response<T>> responseObservable) {
-                return responseObservable.map(new Func1<Response<T>, T>() {
+            public Observable<T> call(Observable<IModel<T>> responseObservable) {
+                return responseObservable.map(new Func1<IModel<T>, T>() {
                     @Override
-                    public T call(Response<T> tResponse) {
-
-                        if (tResponse.code != 0) throw new RuntimeException();
+                    public T call(IModel<T> tResponse) {
+                        System.err.println("my_code"+tResponse.code);
+                        if (tResponse.code != 200)
+                            throw new HttpTimeException(tResponse.code);
                         return tResponse.data;
                     }
                 }).onErrorResumeNext(new HttpResponseFunc<T>());

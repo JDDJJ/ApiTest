@@ -1,9 +1,16 @@
 package com.io.jdd.apitest.token.http.exception;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import rx.Observer;
 
 public class RxSubscriber<T> extends ErrorSubscriber<T> {
-
+//    private Context context;
+//
+//    public RxSubscriber(Context context) {
+//        this.context = context;
+//    }
     @Override
     public void onStart() {
         super.onStart();
@@ -18,7 +25,8 @@ public class RxSubscriber<T> extends ErrorSubscriber<T> {
     @Override
     protected void onError(ApiException ex) {
 //        DialogHelper.stopProgressDlg();
-//        Toast.makeText(context, ex.message, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
+        System.err.println(ex.getDisplayMessage()+"--"+ex.getMessage());
     }
 
     @Override

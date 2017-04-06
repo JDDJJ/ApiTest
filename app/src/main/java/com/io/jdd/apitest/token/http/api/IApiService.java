@@ -28,11 +28,11 @@ public interface IApiService {
 
     @GET("/token")
 //    @GET("get_token")
-    Observable<Response<DataBean>> getToken();
+    Observable<IModel<DataBean>> getToken();
 
-    @GET("/token")
-    Observable<Response<DataBean>> refreshToken();
+    @GET("/other")
+    Observable<IModel<DataBean>> testOtherError();
 
     @GET("/list")
-    Observable<ResultModel> getResult();
+    Observable<IModel<DataBean>> getResult();
 }

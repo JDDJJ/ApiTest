@@ -24,8 +24,8 @@ package com.io.jdd.apitest.token.http.api;
 public class ResultModel {
 
     /**
-     * result : false
-     */
+ * result : false
+ */
 
-    public boolean result;
+public boolean result;
 }

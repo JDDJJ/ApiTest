@@ -7,11 +7,11 @@ package com.io.jdd.apitest.token.http.exception;
  */
 public class HttpTimeException extends RuntimeException {
     /*未知错误*/
-    public static final int UNKOWN_ERROR = 0x1002;
+    public static final int UNKOWN_ERROR = 1002;
     /*本地无缓存错误*/
-    public static final int NO_CHACHE_ERROR = 0x1003;
+    public static final int NO_CHACHE_ERROR = 1003;
     /*缓存过时错误*/
-    public static final int CHACHE_TIMEOUT_ERROR = 0x1004;
+    public static final int CHACHE_TIMEOUT_ERROR = 1004;
 
 
     public HttpTimeException(int resultCode) {

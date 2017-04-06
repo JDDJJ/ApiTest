@@ -2,9 +2,12 @@ package com.io.jdd.apitest.token.http;
 
 import android.util.Log;
 
+import com.io.jdd.apitest.token.http.api.DataBean;
 import com.io.jdd.apitest.token.http.api.ErrorCode;
 import com.io.jdd.apitest.token.http.api.IApiService;
-import com.io.jdd.apitest.token.http.api.TestModel;
+import com.io.jdd.apitest.token.http.api.IModel;
+import com.io.jdd.apitest.token.http.exception.RxSubscriber;
+import com.io.jdd.apitest.token.http.exception.Transformer;
 
 import java.io.IOException;
 import java.util.Date;
@@ -12,7 +15,6 @@ import java.util.Date;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-import rx.Subscriber;
 
 /**
  * 全局自动刷新Token的拦截器
@@ -94,26 +96,18 @@ public class TokenInterceptor implements Interceptor {
             } else {
                 // call the refresh token api.
                 System.out.println("静默自动刷新Token,然后重新请求数据");
-                RetrofitUtil.getInstance().get(IApiService.class).refreshToken().subscribe(new Subscriber<TestModel>() {
-                    @Override
-                    public void onCompleted() {
+                RetrofitUtil.getInstance().get(IApiService.class).getToken()
+                        .compose(Transformer.<DataBean>sTransformer())
+                        .subscribe(new RxSubscriber<DataBean>(){
 
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(TestModel model) {
-                        if (model != null) {
-                            tokenChangedTime = new Date().getTime();
-                            GlobalToken.updateToken(model.getData().getToken());
-                            Log.d("Token", "Refresh token success, time = " + tokenChangedTime);
-                        }
-                    }
-                });
+                            @Override
+                            public void onNext(DataBean dataBean) {
+                                super.onNext(dataBean);
+                                tokenChangedTime = new Date().getTime();
+                                GlobalToken.updateToken(dataBean.getToken());
+                                Log.d("Token", "Refresh token success, time = " + tokenChangedTime);
+                            }
+                        });
                 return GlobalToken.getToken();
             }
         }

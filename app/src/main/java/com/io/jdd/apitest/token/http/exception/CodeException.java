@@ -16,20 +16,21 @@ import java.lang.annotation.RetentionPolicy;
 public class CodeException {
 
     /*网络错误*/
-    public static final int NETWORD_ERROR = 0x1;
+    public static final int NETWORD_ERROR = 201;
     /*http_错误*/
-    public static final int HTTP_ERROR = 0x2;
+    public static final int HTTP_ERROR = 202;
     /*fastjson错误*/
-    public static final int JSON_ERROR = 0x3;
+    public static final int JSON_ERROR = 203;
     /*未知错误*/
-    public static final int UNKNOWN_ERROR = 0x4;
+    public static final int UNKNOWN_ERROR = 204;
     /*运行时异常-包含自定义异常*/
-    public static final int RUNTIME_ERROR = 0x5;
+    public static final int RUNTIME_ERROR = 205;
     /*无法解析该域名*/
-    public static final int UNKOWNHOST_ERROR = 0x6;
+    public static final int UNKOWNHOST_ERROR = 206;
 
+    public static final int Payment_Required = 402;
 
-    @IntDef({NETWORD_ERROR, HTTP_ERROR, RUNTIME_ERROR, UNKNOWN_ERROR, JSON_ERROR, UNKOWNHOST_ERROR})
+    @IntDef({NETWORD_ERROR, HTTP_ERROR, RUNTIME_ERROR, UNKNOWN_ERROR, JSON_ERROR, UNKOWNHOST_ERROR,Payment_Required})
     @Retention(RetentionPolicy.SOURCE)
 
     public @interface CodeEp {

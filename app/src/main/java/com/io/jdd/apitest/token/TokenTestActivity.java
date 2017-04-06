@@ -17,21 +17,18 @@
 package com.io.jdd.apitest.token;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.io.jdd.apitest.BaseActivity;
 import com.io.jdd.apitest.R;
 import com.io.jdd.apitest.token.http.GlobalToken;
 import com.io.jdd.apitest.token.http.RetrofitUtil;
+import com.io.jdd.apitest.token.http.api.DataBean;
 import com.io.jdd.apitest.token.http.api.IApiService;
-import com.io.jdd.apitest.token.http.api.ResultModel;
-import com.io.jdd.apitest.token.http.api.TestModel;
+import com.io.jdd.apitest.token.http.exception.RxSubscriber;
+import com.io.jdd.apitest.token.http.exception.Transformer;
 
 import butterknife.OnClick;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by david on 16/8/21.
@@ -55,6 +52,23 @@ public class TokenTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_token_get)
     public void onGetTokenClick(View v) {
+        RetrofitUtil.getInstance()
+                .get(IApiService.class)
+                .getToken().compose(Transformer.<DataBean>sTransformer())
+                .compose(Transformer.<DataBean>switchSchedulers())
+                .subscribe(new RxSubscriber<DataBean>(){
+                    /**
+                     *
+                     * 这里时自定义的订阅者 已经处理的对onError onStart 的模块  只需要重写 onNext parse数据就好 而如果不需要进度条什么的  错误处理想用其他方式处理 可通过继承ErrorSubscriber 或者用rx的原生也可以
+                     * @param dataBean
+                     */
+                    @Override
+                    public void onNext(DataBean dataBean) {
+                        super.onNext(dataBean);
+                        System.out.println(dataBean.getToken());//输出
+                        GlobalToken.updateToken(dataBean.getToken());//第一此获取
+                    }
+                });
 //        RetrofitUtil.getInstance()
 //            .get(IApiService.class)
 //            .getToken()
@@ -84,28 +98,23 @@ public class TokenTestActivity extends BaseActivity {
 //            });
     }
 
+    /**
+     * 访问接口 token失效  服务端是不会返回新的token的 客户端必须自己去取
+     * @param v
+     */
     @OnClick(R.id.btn_request)
     public void onRequestClick(View v) {
         for (int i = 0; i < 5; i++) {
             RetrofitUtil.getInstance()
                 .get(IApiService.class)
                 .getResult()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ResultModel>() {
+                .compose(Transformer.<DataBean>sTransformer())
+                    .compose(Transformer.<DataBean>switchSchedulers())
+                .subscribe(new RxSubscriber<DataBean>(){
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResultModel model) {
-
+                    public void onNext(DataBean dataBean) {
+                        super.onNext(dataBean);
+                        System.err.println(dataBean.getToken());
                     }
                 });
         }
